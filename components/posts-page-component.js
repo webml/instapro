@@ -30,18 +30,13 @@ const postComponent = ({imageUrl, user, id, likes, description, createdAt}) => `
                   </li>
 `
 
-export function renderPostsPageComponent({ appEl }) {
-  // @TODO: реализовать рендер постов из api
-  console.log("Актуальный список постов:", posts);
-
+export function renderPostsPageComponent({ appEl, user }) {
   /**
    * @TODO: чтобы отформатировать дату создания поста в виде "19 минут назад"
    * можно использовать https://date-fns.org/v2.29.3/docs/formatDistanceToNow
    */
 
   const fead = posts.map(post => postComponent(post)).join(" ")
-
-  console.log('fead:', fead);
 
   const appHtml = `
               <div class="page-container">
@@ -55,6 +50,7 @@ export function renderPostsPageComponent({ appEl }) {
 
   renderHeaderComponent({
     element: document.querySelector(".header-container"),
+    user
   });
 
   for (let userEl of document.querySelectorAll(".post-header")) {
