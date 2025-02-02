@@ -88,3 +88,27 @@ export function uploadImage({ file }) {
     return response.json();
   });
 }
+
+export const addPost = ({token, description, imageUrl}) => {
+  const post = {
+    description, imageUrl
+  }
+
+  return fetch(postsHost, {
+    method: "POST",
+    headers: {
+      Authorization: token,
+    },
+    body: JSON.stringify(post)
+  })
+    .then((response) => {
+      if (response.status === 401) {
+        throw new Error("Нет авторизации");
+      }
+
+      return response.json();
+    })
+    .then((data) => {
+      return data.post;
+    });
+}

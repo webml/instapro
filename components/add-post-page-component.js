@@ -1,7 +1,8 @@
 import { renderHeaderComponent } from "./header-component.js";
+import { renderUploadImageComponent } from "./upload-image-component.js";
 
 export function renderAddPostPageComponent({ appEl, onAddPostClick, user }) {
-  let imageUrl = "";
+  let imageUrl;
 
   const render = () => {
     const appHtml = `
@@ -39,10 +40,19 @@ export function renderAddPostPageComponent({ appEl, onAddPostClick, user }) {
       },
     });
 
-    appEl.getElementById("add-button").addEventListener("click", () => {
+    document.getElementById("add-button").addEventListener("click", () => {
+      if (!imageUrl) {
+        setError("Добавьте картинку");
+      }
+
+      const description = document.getElementById("desc-input").value;
+      if (!description) {
+        setError("Введите описание картинки");
+      }
+
       onAddPostClick({
-        description: "Описание картинки",
-        imageUrl: "https://image.png",
+        description,
+        imageUrl,
       });
     });
   };

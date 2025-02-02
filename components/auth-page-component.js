@@ -1,5 +1,5 @@
 import { renderHeaderComponent } from "./header-component.js";
-import {renderUploadImageComponent} from './upload-image-component.js'
+import { renderUploadImageComponent } from "./upload-image-component.js";
 import { registerUser, loginUser } from "../api.js";
 
 /**
@@ -154,7 +154,7 @@ export function renderAuthPageComponent({ appEl, setUser }) {
             setUser(user.user);
           })
           .catch(async (err) => {
-            const {error} = await err
+            const { error } = await err;
             console.warn(error);
             setError(error);
           });
