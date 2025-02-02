@@ -1,17 +1,45 @@
-export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
-  const render = () => {
-    // @TODO: Реализовать страницу добавления поста
-    const appHtml = `
-    <div class="page-container">
-      <div class="header-container"></div>
-      Cтраница добавления поста
-      <button class="button" id="add-button">Добавить</button>
-    </div>
-  `;
+import { renderHeaderComponent } from "./header-component.js";
 
+export function renderAddPostPageComponent({ appEl, onAddPostClick, user }) {
+  let imageUrl = "";
+
+  const render = () => {
+    const appHtml = `
+      <div class="page-container">
+        <div class="header-container"></div>
+         <div class="form">
+         <h3 class="form-title">Добавление новго поста</h3>
+          <div class="form-inputs">
+           <div class="upload-image-container"></div>
+           <input type="text" id="desc-input" class="input" placeholder="Описание поста" />
+           <div class="form-error"></div>
+           </div>
+        <button class="button" id="add-button">Добавить</button>
+      </div>
+    `;
     appEl.innerHTML = appHtml;
 
-    document.getElementById("add-button").addEventListener("click", () => {
+    /**
+     * Устанавливает сообщение об ошибке в форме.
+     * @param {string} message - Текст сообщения об ошибке.
+     */
+    const setError = (message) => {
+      appEl.querySelector(".form-error").textContent = message;
+    };
+
+    renderHeaderComponent({
+      element: appEl.querySelector(".header-container"),
+      user,
+    });
+
+    renderUploadImageComponent({
+      element: appEl.querySelector(".upload-image-container"),
+      onImageUrlChange(newImageUrl) {
+        imageUrl = newImageUrl;
+      },
+    });
+
+    appEl.getElementById("add-button").addEventListener("click", () => {
       onAddPostClick({
         description: "Описание картинки",
         imageUrl: "https://image.png",

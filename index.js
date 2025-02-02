@@ -123,6 +123,7 @@ const renderApp = () => {
         console.log("Добавляю пост...", { description, imageUrl });
         goToPage(POSTS_PAGE);
       },
+      user
     });
   }
 
