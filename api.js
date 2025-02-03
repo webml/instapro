@@ -112,3 +112,24 @@ export const addPost = ({token, description, imageUrl}) => {
       return data.post;
     });
 }
+
+export const changeFavorite = ({token, postId, event}) => {
+  const link = `${postsHost}/${postId}/${event}`
+
+  return fetch(link, {
+    method: "POST",
+    headers: {
+      Authorization: token,
+    },
+  })
+    .then((response) => {
+      if (response.status === 401) {
+        throw new Error("Нет авторизации");
+      }
+
+      return response.json();
+    })
+    .then((data) => {
+      return data.posts;
+    });
+}
