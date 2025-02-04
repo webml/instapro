@@ -130,6 +130,6 @@ export const changeFavorite = ({token, postId, event}) => {
       return response.json();
     })
     .then((data) => {
-      return data.posts;
+      return data.post;
     });
 }
