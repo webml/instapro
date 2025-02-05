@@ -1,12 +1,15 @@
 .page-container {
   padding: 0 20px;
+  position: relative;
 }
+
 
 .page-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid #e0e0e0;
+  background: white;
   padding: 20px 16px;
   margin-left: -20px;
   margin-right: -20px;
@@ -21,6 +24,9 @@
 
 .header-container {
   margin-bottom: 8px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
 .header-button {
@@ -46,12 +52,24 @@
   margin: 0;
 }
 
+.post {
+  padding-bottom: 8px;
+  border-bottom: solid 1px ghostwhite;
+  margin-bottom: 8px;
+}
+
 .post-header {
   display: flex;
   flex-direction: row;
   align-items: center;
   margin-bottom: 10px;
   cursor: pointer;
+}
+
+.post-header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .post-header__user-image {

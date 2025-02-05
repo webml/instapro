@@ -1,14 +1,14 @@
 import { USER_POSTS_PAGE } from "../routes.js";
 import { renderHeaderComponent } from "./header-component.js";
 import { posts, goToPage } from "../index.js";
-import { changeFavorite } from "../api.js";
-import { formatDistanceToNow } from 'date-fns';
-import { ru } from 'date-fns/locale';
+import { changeFavorite, deletePost } from "../api.js";
+import { formatDistanceToNow } from "../node_modules/date-fns/index.js";
+import { ru } from "../node_modules/date-fns/locale/ru.js";
 
 const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return formatDistanceToNow(date, { locale: ru });
-}
+  const date = new Date(dateString);
+  return formatDistanceToNow(date, { locale: ru });
+};
 
 const postComponent = ({
   imageUrl,
@@ -18,10 +18,15 @@ const postComponent = ({
   description,
   createdAt,
   isLiked,
-}) => ` <li class="post">
-          <div class="post-header" data-user-id=${user.id}>
-              <img src=${user.imageUrl} class="post-header__user-image">
-              <p class="post-header__user-name">${user.name}</p>
+}, {_id}) => ` <li class="post" data-post-id="${id}>
+          <div class="post-header-container">
+            <div class="post-header" data-user-id=${user.id}>
+                <img src=${user.imageUrl} class="post-header__user-image">
+                <p class="post-header__user-name">${user.name}</p>
+            </div>
+            ${user.id === _id ? `<button data-post-id="${id}" class="delete-button">
+              Удалить пост
+            </button>` : ''}
           </div>
         
           <div class="post-image-container">
@@ -124,7 +129,7 @@ export function renderPostsPageComponent({ appEl, user, token }) {
 
   posts.forEach((post) => {
     const postElement = document.createElement("li");
-    postElement.innerHTML = postComponent(post);
+    postElement.innerHTML = postComponent(post, user);
 
     const userEl = postElement.querySelector(".post-header");
     userEl.addEventListener("click", () => {

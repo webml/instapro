@@ -133,3 +133,24 @@ export const changeFavorite = ({token, postId, event}) => {
       return data.post;
     });
 }
+
+export const deletePost = ({token, postId}) => {
+  const link = `${postsHost}/${postId}`
+
+  return fetch(link, {
+    method: "DELETE",
+    headers: {
+      Authorization: token,
+    },
+  })
+    .then((response) => {
+      if (response.status === 401) {
+        throw new Error("Нет авторизации");
+      }
+
+      return response.json();
+    })
+    .then((data) => {
+      return data.post;
+    });
+}
