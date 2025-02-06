@@ -44,6 +44,13 @@
   text-align: right;
 }
 
+.tooltip {
+  text-align: center;
+  width: 100%;
+  color: #8a8a8a;
+  margin-bottom: 20px;
+}
+
 .posts {
   display: flex;
   flex-direction: column;

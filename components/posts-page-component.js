@@ -18,7 +18,7 @@ const postComponent = ({
   description,
   createdAt,
   isLiked,
-}, {_id}) => ` <li class="post" data-post-id="${id}>
+}, {_id}) => `
           <div class="post-header-container">
             <div class="post-header" data-user-id=${user.id}>
                 <img src=${user.imageUrl} class="post-header__user-image">
@@ -53,7 +53,6 @@ const postComponent = ({
           <p class="post-date">
             ${formatDate(createdAt)}
           </p>
-        </li>
 `;
 
 const handleLike = async ({ user, postId, event, token, posts }) => {
@@ -127,8 +126,10 @@ export function renderPostsPageComponent({ appEl, user, token }) {
   const postsList = document.createElement("ul");
   postsList.className = "posts";
 
-  posts.forEach((post) => {
+  posts.forEach((post, index) => {
     const postElement = document.createElement("li");
+    postElement.classList.add('post')
+    postElement.setAttribute('data-post-id', post.id)
     postElement.innerHTML = postComponent(post, user);
 
     const userEl = postElement.querySelector(".post-header");
@@ -142,7 +143,7 @@ export function renderPostsPageComponent({ appEl, user, token }) {
     if (likeButton) {
       likeButton.addEventListener("click", async (e) => {
         e.stopPropagation();
-        const postId = likeButton.getAttribute("data-post-id");
+        const postId = post.id
         const event = likeButton.getAttribute("data-set-favorite");
         try {
           const updatedPost = await handleLike({
@@ -158,6 +159,23 @@ export function renderPostsPageComponent({ appEl, user, token }) {
           console.error(error);
         }
       });
+    }
+
+    const deleteButton = postElement.querySelector('.delete-button')
+    if (deleteButton) {
+      deleteButton.addEventListener("click", async (e) => {
+        const postId = post.id
+
+        try {
+          await deletePost({token, postId})
+          posts.filter(el => el.id !== postId)
+
+          const htmlPosts = document.querySelectorAll('.post')
+          htmlPosts[index].innerHTML=`<p class='tooltip'>Пост удален</p>`
+        } catch (error) {
+          console.error(error);
+        }
+      })
     }
 
     postsList.appendChild(postElement);
