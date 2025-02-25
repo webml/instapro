@@ -10,23 +10,22 @@ const formatDate = (dateString) => {
   return formatDistanceToNow(date, { locale: ru });
 };
 
-const postComponent = ({
-  imageUrl,
-  user,
-  id,
-  likes,
-  description,
-  createdAt,
-  isLiked,
-}, {_id}) => `
+const postComponent = (
+  { imageUrl, user, id, likes, description, createdAt, isLiked },
+  currentUser
+) => `
           <div class="post-header-container">
             <div class="post-header" data-user-id=${user.id}>
                 <img src=${user.imageUrl} class="post-header__user-image">
                 <p class="post-header__user-name">${user.name}</p>
             </div>
-            ${user.id === _id ? `<button data-post-id="${id}" class="delete-button">
+            ${
+              user.id === currentUser?._id
+                ? `<button data-post-id="${id}" class="delete-button">
               Удалить пост
-            </button>` : ''}
+            </button>`
+                : ""
+            }
           </div>
         
           <div class="post-image-container">
@@ -56,6 +55,10 @@ const postComponent = ({
 `;
 
 const handleLike = async ({ user, postId, event, token, posts }) => {
+  if (!user) {
+    return console.log("Требуется авторизация");
+  }
+
   try {
     // Отправляем запрос на сервер
     await changeFavorite({
@@ -128,8 +131,8 @@ export function renderPostsPageComponent({ appEl, user, token }) {
 
   posts.forEach((post, index) => {
     const postElement = document.createElement("li");
-    postElement.classList.add('post')
-    postElement.setAttribute('data-post-id', post.id)
+    postElement.classList.add("post");
+    postElement.setAttribute("data-post-id", post.id);
     postElement.innerHTML = postComponent(post, user);
 
     const userEl = postElement.querySelector(".post-header");
@@ -143,7 +146,7 @@ export function renderPostsPageComponent({ appEl, user, token }) {
     if (likeButton) {
       likeButton.addEventListener("click", async (e) => {
         e.stopPropagation();
-        const postId = post.id
+        const postId = post.id;
         const event = likeButton.getAttribute("data-set-favorite");
         try {
           const updatedPost = await handleLike({
@@ -161,21 +164,21 @@ export function renderPostsPageComponent({ appEl, user, token }) {
       });
     }
 
-    const deleteButton = postElement.querySelector('.delete-button')
+    const deleteButton = postElement.querySelector(".delete-button");
     if (deleteButton) {
       deleteButton.addEventListener("click", async (e) => {
-        const postId = post.id
+        const postId = post.id;
 
         try {
-          await deletePost({token, postId})
-          posts.filter(el => el.id !== postId)
+          await deletePost({ token, postId });
+          posts.filter((el) => el.id !== postId);
 
-          const htmlPosts = document.querySelectorAll('.post')
-          htmlPosts[index].innerHTML=`<p class='tooltip'>Пост удален</p>`
+          const htmlPosts = document.querySelectorAll(".post");
+          htmlPosts[index].innerHTML = `<p class='tooltip'>Пост удален</p>`;
         } catch (error) {
           console.error(error);
         }
-      })
+      });
     }
 
     postsList.appendChild(postElement);

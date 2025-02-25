@@ -24,7 +24,7 @@ export function getPosts({ token }) {
 }
 
 export const getUserPosts = ({ token, userId }) => {
-  const link = `${postsHost}/user-posts/${userId}`
+  const link = `${postsHost}/user-posts/${userId}`;
 
   return fetch(link, {
     method: "GET",
@@ -42,7 +42,7 @@ export const getUserPosts = ({ token, userId }) => {
     .then((data) => {
       return data.posts;
     });
-}
+};
 
 export function registerUser({ login, password, name, imageUrl }) {
   return fetch(baseHost + "/api/user", {
@@ -89,17 +89,18 @@ export function uploadImage({ file }) {
   });
 }
 
-export const addPost = ({token, description, imageUrl}) => {
+export const addPost = ({ token, description, imageUrl }) => {
   const post = {
-    description, imageUrl
-  }
+    description,
+    imageUrl,
+  };
 
   return fetch(postsHost, {
     method: "POST",
     headers: {
       Authorization: token,
     },
-    body: JSON.stringify(post)
+    body: JSON.stringify(post),
   })
     .then((response) => {
       if (response.status === 401) {
@@ -111,10 +112,10 @@ export const addPost = ({token, description, imageUrl}) => {
     .then((data) => {
       return data.post;
     });
-}
+};
 
-export const changeFavorite = ({token, postId, event}) => {
-  const link = `${postsHost}/${postId}/${event}`
+export const changeFavorite = ({ token, postId, event }) => {
+  const link = `${postsHost}/${postId}/${event}`;
 
   return fetch(link, {
     method: "POST",
@@ -132,10 +133,10 @@ export const changeFavorite = ({token, postId, event}) => {
     .then((data) => {
       return data.post;
     });
-}
+};
 
-export const deletePost = ({token, postId}) => {
-  const link = `${postsHost}/${postId}`
+export const deletePost = ({ token, postId }) => {
+  const link = `${postsHost}/${postId}`;
 
   return fetch(link, {
     method: "DELETE",
@@ -153,4 +154,4 @@ export const deletePost = ({token, postId}) => {
     .then((data) => {
       return data.post;
     });
-}
+};
