@@ -146,8 +146,6 @@ export function renderPostsPageComponent({ appEl, user, token }) {
         const postId = post.id;
         const event = likeButton.getAttribute("data-set-favorite");
 
-        console.log(event);
-
         try {
           const updatedPost = await handleLike({
             user,
@@ -157,11 +155,13 @@ export function renderPostsPageComponent({ appEl, user, token }) {
             posts,
           });
 
-          console.log(updatedPost);
-
           updateLikeButton(postElement, updatedPost);
         } catch (error) {
-          console.error(error);
+          const htmlPosts = document.querySelectorAll(".post");
+
+          const currentPost =
+            htmlPosts[index].querySelector(".post-delete-error");
+          currentPost.innerHTML = `<p class='tooltip'>Авторизуйтесь, чтобы ставить лайки</p>`;
         }
       });
     }
@@ -170,6 +170,7 @@ export function renderPostsPageComponent({ appEl, user, token }) {
     if (deleteButton) {
       deleteButton.addEventListener("click", async (e) => {
         const postId = post.id;
+
         const htmlPosts = document.querySelectorAll(".post");
 
         await deletePost({ token, postId })
