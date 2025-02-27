@@ -131,6 +131,8 @@ export const changeFavorite = ({ token, postId, event }) => {
       return response.json();
     })
     .then((data) => {
+      console.log(data.post);
+
       return data.post;
     });
 };
@@ -147,6 +149,10 @@ export const deletePost = ({ token, postId }) => {
     .then((response) => {
       if (response.status === 401) {
         throw new Error("Нет авторизации");
+      }
+
+      if (response.status === 500) {
+        throw new Error("Ошибка на сервере");
       }
 
       return response.json();

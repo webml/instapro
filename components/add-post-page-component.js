@@ -43,12 +43,17 @@ export function renderAddPostPageComponent({ appEl, onAddPostClick, user }) {
     document.getElementById("add-button").addEventListener("click", () => {
       if (!imageUrl) {
         setError("Добавьте картинку");
+        return;
       }
 
-      const description = document.getElementById("desc-input").value;
-      if (!description) {
+      let description = document.getElementById("desc-input").value;
+      if (!description || description.length === 0) {
         setError("Введите описание картинки");
+        return;
       }
+
+      description = description.replaceAll("<", "&lt;");
+      description = description.replaceAll(">", "&gt;");
 
       onAddPostClick({
         description,

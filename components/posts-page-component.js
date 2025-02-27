@@ -27,7 +27,7 @@ const postComponent = (
                 : ""
             }
           </div>
-        
+          <span class="post-delete-error"></span>
           <div class="post-image-container">
             <img class="post-image" src=${imageUrl} />
           </div>
@@ -69,7 +69,6 @@ const handleLike = async ({ user, postId, event, token, posts }) => {
 
     // Находим индекс поста
     const postIndex = posts.findIndex((post) => post.id === postId);
-
     if (postIndex === -1) {
       throw new Error("Пост не найден");
     }
@@ -104,14 +103,12 @@ const updateLikeButton = (element, post) => {
   if (!likeButton || !likesText) return;
 
   const { isLiked } = post;
-  likeButton.setAttribute("data-set-favorite", isLiked ? "like" : "dislike");
+  likeButton.setAttribute("data-set-favorite", isLiked ? "dislike" : "like");
   likeButton.innerHTML = `
-                     <img src="./assets/images/${
-                       isLiked ? "like-active" : "like-not-active"
-                     }.svg">
-                 `;
-
-  // Обновляем текст счетчика
+        <img src="./assets/images/${
+          isLiked ? "like-active" : "like-not-active"
+        }.svg">
+    `;
   likesText.textContent = `Нравится: ${post.likes.length}`;
 };
 
@@ -148,6 +145,9 @@ export function renderPostsPageComponent({ appEl, user, token }) {
         e.stopPropagation();
         const postId = post.id;
         const event = likeButton.getAttribute("data-set-favorite");
+
+        console.log(event);
+
         try {
           const updatedPost = await handleLike({
             user,
@@ -156,6 +156,8 @@ export function renderPostsPageComponent({ appEl, user, token }) {
             token,
             posts,
           });
+
+          console.log(updatedPost);
 
           updateLikeButton(postElement, updatedPost);
         } catch (error) {
@@ -168,16 +170,19 @@ export function renderPostsPageComponent({ appEl, user, token }) {
     if (deleteButton) {
       deleteButton.addEventListener("click", async (e) => {
         const postId = post.id;
+        const htmlPosts = document.querySelectorAll(".post");
 
-        try {
-          await deletePost({ token, postId });
-          posts.filter((el) => el.id !== postId);
+        await deletePost({ token, postId })
+          .then(() => {
+            posts.filter((el) => el.id !== postId);
 
-          const htmlPosts = document.querySelectorAll(".post");
-          htmlPosts[index].innerHTML = `<p class='tooltip'>Пост удален</p>`;
-        } catch (error) {
-          console.error(error);
-        }
+            htmlPosts[index].innerHTML = `<p class='tooltip'>Пост удален</p>`;
+          })
+          .catch(() => {
+            const currentPost =
+              htmlPosts[index].querySelector(".post-delete-error");
+            currentPost.innerHTML = `<p class='tooltip'>Ошибка удаления поста</p>`;
+          });
       });
     }
 

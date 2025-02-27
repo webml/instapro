@@ -105,6 +105,9 @@ export function renderAuthPageComponent({ appEl, setUser }) {
         let login = document.getElementById("login-input").value;
         const password = document.getElementById("password-input").value;
 
+        login = login.replaceAll("<", "&lt;");
+        login = login.replaceAll(">", "&gt;");
+
         if (!login) {
           alert("Введите логин");
           return;
@@ -114,10 +117,6 @@ export function renderAuthPageComponent({ appEl, setUser }) {
           alert("Введите пароль");
           return;
         }
-
-        login = login.replaceAll('<', '&lt;')
-        login = login.replaceAll('>', '&gt;')
-
 
         loginUser({ login, password })
           .then((user) => {
@@ -129,9 +128,15 @@ export function renderAuthPageComponent({ appEl, setUser }) {
           });
       } else {
         // Обработка регистрации
-        const login = document.getElementById("login-input").value;
-        const name = document.getElementById("name-input").value;
+        let login = document.getElementById("login-input").value;
+        let name = document.getElementById("name-input").value;
         const password = document.getElementById("password-input").value;
+
+        login = login.replaceAll("<", "&lt;");
+        login = login.replaceAll(">", "&gt;");
+
+        name = name.replaceAll("<", "&lt;");
+        name = name.replaceAll(">", "&gt;");
 
         if (!name) {
           alert("Введите имя");
