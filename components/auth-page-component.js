@@ -1,3 +1,7 @@
+import { renderHeaderComponent } from "./header-component.js";
+import { renderUploadImageComponent } from "./upload-image-component.js";
+import { registerUser, loginUser } from "../api.js";
+
 /**
  * Компонент страницы авторизации.
  * Этот компонент предоставляет пользователю интерфейс для входа в систему или регистрации.
@@ -98,8 +102,11 @@ export function renderAuthPageComponent({ appEl, setUser }) {
 
       if (isLoginMode) {
         // Обработка входа
-        const login = document.getElementById("login-input").value;
+        let login = document.getElementById("login-input").value;
         const password = document.getElementById("password-input").value;
+
+        login = login.replaceAll("<", "&lt;");
+        login = login.replaceAll(">", "&gt;");
 
         if (!login) {
           alert("Введите логин");
@@ -121,9 +128,15 @@ export function renderAuthPageComponent({ appEl, setUser }) {
           });
       } else {
         // Обработка регистрации
-        const login = document.getElementById("login-input").value;
-        const name = document.getElementById("name-input").value;
+        let login = document.getElementById("login-input").value;
+        let name = document.getElementById("name-input").value;
         const password = document.getElementById("password-input").value;
+
+        login = login.replaceAll("<", "&lt;");
+        login = login.replaceAll(">", "&gt;");
+
+        name = name.replaceAll("<", "&lt;");
+        name = name.replaceAll(">", "&gt;");
 
         if (!name) {
           alert("Введите имя");
@@ -149,9 +162,10 @@ export function renderAuthPageComponent({ appEl, setUser }) {
           .then((user) => {
             setUser(user.user);
           })
-          .catch((error) => {
+          .catch(async (err) => {
+            const { error } = await err;
             console.warn(error);
-            setError(error.message);
+            setError(error);
           });
       }
     });

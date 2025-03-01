@@ -1,3 +1,5 @@
+import {renderHeaderComponent} from './header-component.js'
+
 /**
  * Компонент страницы загрузки.
  * Этот компонент отображает страницу с индикатором загрузки и заголовком.
@@ -30,6 +32,5 @@ export function renderLoadingPageComponent({ appEl, user, goToPage }) {
   renderHeaderComponent({
     user,
     element: document.querySelector(".header-container"),
-    goToPage,
   });
 }
